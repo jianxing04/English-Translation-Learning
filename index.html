@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="从自己的题库文件夹中选择一套题，逐句练习英语翻译，复制中英文本并查看参考译文。">
+  <title>译习 · 英语翻译训练</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23294de4'/%3E%3Cpath d='M7 9h10M12 6v3M9 9c0 6 3 10 8 12M16 9c0 6-3 10-9 13M18 25l5-13 5 13M20 21h6' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" type="module"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="译习首页"><span class="brand-mark">译</span><span>译习<span class="brand-subtitle">英语翻译训练</span></span></a>
+    <div class="topbar-note"><span class="keyboard-key">Ctrl</span><span>+</span><span class="keyboard-key">A</span><span class="note-text">在文本框中全选</span></div>
+  </header>
+  <div class="workspace">
+    <aside class="library" aria-label="题库目录">
+      <div class="library-heading"><div><span class="eyebrow">LIBRARY</span><h1>我的题库</h1></div><button id="refresh-folders" class="icon-button" type="button" title="刷新目录" aria-label="刷新目录">↻</button></div>
+      <nav id="breadcrumbs" class="breadcrumbs" aria-label="目录路径"></nav>
+      <div class="folder-toolbar"><span id="folder-caption">根目录</span><button id="parent-folder" class="text-button" type="button" hidden>上一级</button></div>
+      <div id="folder-list" class="folder-list" aria-live="polite"><p class="directory-message">正在读取题库…</p></div>
+      <p class="library-hint">逐层打开文件夹，选择一套题开始练习。</p>
+    </aside>
+    <main id="main-content" class="main-content">
+      <section id="welcome" class="welcome">
+        <div class="welcome-symbol" aria-hidden="true">Aa<span>译</span></div>
+        <span class="eyebrow">YOUR TRANSLATION DESK</span>
+        <h2>从一句开始。</h2>
+        <p>在左侧找到你要练习的套题，<br>写下译文，再对照参考答案。</p>
+        <div class="welcome-steps"><span><b>01</b> 选择套题</span><span><b>02</b> 逐句翻译</span><span><b>03</b> 复制评分</span></div>
+      </section>
+      <section id="practice" class="practice" aria-labelledby="set-title" hidden>
+        <header class="practice-heading">
+          <div><p id="set-location" class="set-location"></p><h2 id="set-title"></h2></div>
+          <div class="completion"><span id="completion-count">0 / 0</span><span>已填写</span></div>
+        </header>
+        <div class="sentence-toolbar"><span class="eyebrow">SENTENCES</span><div id="sentence-tabs" class="sentence-tabs" role="group" aria-label="选择练习句子"></div><span id="sentence-count" class="sentence-count"></span></div>
+        <div class="practice-grid">
+          <div class="writing-column">
+            <section class="panel question-panel">
+              <div class="panel-heading"><label for="chinese-text"><span class="label-number">01</span> 中文原句</label><span class="panel-note">只读 · 可全选</span></div>
+              <textarea id="chinese-text" class="chinese-text auto-height" readonly rows="3" spellcheck="false"></textarea>
+            </section>
+            <section class="panel writing-panel">
+              <div class="panel-heading"><label for="translation-input"><span class="label-number">02</span> 我的译文</label><span id="word-count" class="panel-note">0 words</span></div>
+              <textarea id="translation-input" class="translation-input" rows="6" lang="en" placeholder="在这里写下你的英文翻译…" spellcheck="true"></textarea>
+              <div class="writing-footer"><span>切换句子会保留当前译文</span><span class="keyboard-key">Ctrl + A</span></div>
+            </section>
+            <div class="sentence-navigation"><button id="previous-sentence" class="secondary-button" type="button">上一句</button><span id="position-label"></span><button id="next-sentence" class="primary-button" type="button">下一句</button></div>
+          </div>
+          <div class="review-column">
+            <section class="panel copy-panel">
+              <div class="panel-heading"><label for="evaluation-text">复制到 AI 评分</label><span class="mini-label">中英合并</span></div>
+              <p class="copy-help">点击下方文本框，按 Ctrl+A 即可全选中文和你的译文。</p>
+              <textarea id="evaluation-text" class="evaluation-text auto-height" rows="7" readonly spellcheck="false"></textarea>
+              <button id="copy-evaluation" class="primary-button full-width" type="button">复制中文与我的译文</button>
+              <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+            </section>
+            <section class="panel reference-panel">
+              <div class="panel-heading"><span class="panel-title">参考译文</span><span class="reference-badge">对照学习</span></div>
+              <p id="reference-hint" class="reference-hint">先尝试自己翻译，准备好后再查看。</p>
+              <div id="reference-content" hidden><label class="visually-hidden" for="reference-text">当前句子的参考译文</label><textarea id="reference-text" class="reference-text auto-height" readonly rows="5" lang="en" spellcheck="false"></textarea></div>
+              <button id="toggle-reference" class="secondary-button full-width" type="button" aria-expanded="false" aria-controls="reference-content">显示参考译文</button>
+            </section>
+          </div>
+        </div>
+      </section>
+      <div id="main-error" class="main-error" role="alert" hidden></div>
+      <footer class="page-footer"><span>一句一句，练出自己的表达。</span><span>本地题库 · 译文保留至关闭或刷新页面</span></footer>
+    </main>
+  </div>
+  <noscript><p class="noscript-note">请启用浏览器的 JavaScript 后使用翻译训练。</p></noscript>
+</body>
+</html>

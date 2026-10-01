@@ -1,0 +1,13 @@
+{
+  "name": "translation-learning",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "从本地文件夹读取题库的逐句翻译练习网站",
+  "scripts": {
+    "start": "node server.mjs --open",
+    "dev": "node server.mjs",
+    "test": "node --test server.test.mjs"
+  },
+  "engines": { "node": ">=20" }
+}
